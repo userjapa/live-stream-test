@@ -1,11 +1,6 @@
-* {
-  margin: 0;
-  padding: 0;
-  border: none;
-}
-
 html, body {
-  width: 100%;
+  padding: 0px;
+  margin: 0px;
 }
 
 video {
@@ -17,13 +12,13 @@ video {
   width: 100%;
 }
 
-.video-large {
+#camera {
   width: 75%;
   float: left;
 }
 
-.users-container {
-  width: 21%;
+#users-container {
+  width: 20%;
   float: right;
   padding: 2%;
   position: relative;
@@ -38,9 +33,6 @@ video {
   color: red;
   text-decoration: underline;
   cursor: pointer;
-  border: 2px solid black;
-  float: right;
-  max-width: 100px;
 }
 
 #users .active {

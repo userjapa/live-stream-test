@@ -7,8 +7,8 @@ module.exports = server => {
   io.on('connection', socket => {
     console.log(`User ${socket.id} connected!`);
 
-    socket.emit('add-user', {
-      sockets: sockets
+    socket.emit('add-users', {
+      users: sockets
     })
 
     socket.broadcast.emit('add-users', {

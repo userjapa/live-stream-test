@@ -3343,10 +3343,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-const socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client___default.a.connect('http://192.168.0.16:8080');
+const socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client___default.a.connect(window.location.host);
 
 socket.on('connect', () => {
-  console.log('User Connected!');
+  console.log('You are Connected!');
 });
 
 let answers = {};
@@ -3358,16 +3358,16 @@ const SessionDescription = window.RTCSessionDescription || window.mozRTCSessionD
 
 var pc = new PeerConnection({ iceServers: [{ url: 'stun:stun.services.mozilla.com' }] });
 
-pc.onaddstream = obj => {
+pc.onaddstream = function (obj) {
   let video = document.createElement('video');
   video.setAttribute('class', 'video-small');
   video.setAttribute('id', 'video-small');
   video.src = window.URL.createObjectURL(obj.stream);
+  video.play();
   document.getElementById('users-container').appendChild(video);
 };
 
 navigator.mediaDevices.getUserMedia({
-  audio: false,
   video: true
 }).then(stream => {
   let video = document.getElementById('camera');
@@ -3393,7 +3393,7 @@ const createOffer = id => {
 };
 
 socket.on('answer-made', data => {
-  pc.setRemoteDescription(new SessionDescription(data.answer), () => {
+  pc.setRemoteDescription(new SessionDescription(data.answer), function () {
     document.getElementById(data.socket).setAttribute('class', 'active');
     if (!answers[data.socket]) {
       createOffer(data.socket);
@@ -3407,9 +3407,9 @@ socket.on('answer-made', data => {
 socket.on('offer-made', data => {
   offer = data.offer;
 
-  pc.setRemoteDescription(new SessionDescription(data.offer), () => {
-    pc.createAnswer(answer => {
-      pc.setLocalDescription(new SessionDescription(answer), () => {
+  pc.setRemoteDescription(new SessionDescription(data.offer), function () {
+    pc.createAnswer(function (answer) {
+      pc.setLocalDescription(new SessionDescription(answer), function () {
         socket.emit('make-answer', {
           answer: answer,
           to: data.socket
@@ -3427,18 +3427,21 @@ socket.on('offer-made', data => {
 
 socket.on('add-users', data => {
   for (const x of data.users) {
-    const div = document.createElement('div');
-    div.setAttribute('id', x);
-    div.addEventListener('click', () => {
+    let user = document.createElement('div');
+    user.setAttribute('id', x);
+    user.innerHTML = x;
+    user.addEventListener('click', () => {
       createOffer(x);
     });
-    document.getElementById('users').appendChild(div);
+    document.getElementById('users').appendChild(user);
   }
 });
 
 socket.on('remove-user', id => {
-  const div = document.getElementById(id);
-  document.getElementById('users').removeChild(div);
+  const user = document.getElementById(id);
+  const small = document.getElementsByClassName('video-small')[0];
+  document.getElementById('users').removeChild(user);
+  document.getElementById('users-container').removeChild(small);
 });
 
 /***/ }),
@@ -3500,7 +3503,7 @@ exports = module.exports = __webpack_require__(23)(false);
 
 
 // module
-exports.push([module.i, "* {\n  margin: 0;\n  padding: 0;\n  border: none;\n}\n\nhtml, body {\n  width: 100%;\n}\n\nvideo {\n  background: #CCC;\n  border: 1px solid black;\n}\n\n.container {\n  width: 100%;\n}\n\n.video-large {\n  width: 75%;\n  float: left;\n}\n\n.users-container {\n  width: 21%;\n  float: right;\n  padding: 2%;\n  position: relative;\n}\n\n.video-small {\n  margin-top: 20px;\n  width: 100%;\n}\n\n#users div {\n  color: red;\n  text-decoration: underline;\n  cursor: pointer;\n  border: 2px solid black;\n  float: right;\n  max-width: 100px;\n}\n\n#users .active {\n  color: #000;\n  cursor: default;\n}\n", ""]);
+exports.push([module.i, "html, body {\n  padding: 0px;\n  margin: 0px;\n}\n\nvideo {\n  background: #CCC;\n  border: 1px solid black;\n}\n\n.container {\n  width: 100%;\n}\n\n#camera {\n  width: 75%;\n  float: left;\n}\n\n#users-container {\n  width: 20%;\n  float: right;\n  padding: 2%;\n  position: relative;\n}\n\n.video-small {\n  margin-top: 20px;\n  width: 100%;\n}\n\n#users div {\n  color: red;\n  text-decoration: underline;\n  cursor: pointer;\n}\n\n#users .active {\n  color: #000;\n  cursor: default;\n}\n", ""]);
 
 // exports
 

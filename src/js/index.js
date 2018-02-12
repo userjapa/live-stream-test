@@ -2,10 +2,10 @@ import './../css/style.css'
 
 import io from 'socket.io-client'
 
-const socket = io.connect('http://192.168.0.16:8080')
+const socket = io.connect(window.location.host)
 
 socket.on('connect', () => {
-  console.log('User Connected!')
+  console.log('You are Connected!')
 })
 
 let answers = {}
@@ -17,17 +17,17 @@ const SessionDescription = window.RTCSessionDescription || window.mozRTCSessionD
 
 var pc = new PeerConnection({ iceServers: [{ url: 'stun:stun.services.mozilla.com' }]})
 
-pc.onaddstream = obj => {
+pc.onaddstream = function (obj) {
   let video = document.createElement('video')
   video.setAttribute('class', 'video-small')
   video.setAttribute('id', 'video-small')
   video.src = window.URL.createObjectURL(obj.stream)
+  video.play()
   document.getElementById('users-container').appendChild(video)
 }
 
 navigator.mediaDevices.getUserMedia(
   {
-    audio: false,
     video: true
   }
 )
@@ -56,7 +56,7 @@ const createOffer = id => {
 }
 
 socket.on('answer-made', data => {
-  pc.setRemoteDescription(new SessionDescription(data.answer), () => {
+  pc.setRemoteDescription(new SessionDescription(data.answer), function () {
     document.getElementById(data.socket).setAttribute('class', 'active')
     if (!answers[data.socket]) {
       createOffer(data.socket)
@@ -71,9 +71,9 @@ socket.on('answer-made', data => {
 socket.on('offer-made', data => {
   offer = data.offer
 
-  pc.setRemoteDescription(new SessionDescription(data.offer), () => {
-    pc.createAnswer(answer => {
-      pc.setLocalDescription(new SessionDescription(answer), () => {
+  pc.setRemoteDescription(new SessionDescription(data.offer), function () {
+    pc.createAnswer(function (answer) {
+      pc.setLocalDescription(new SessionDescription(answer), function () {
         socket.emit('make-answer', {
           answer: answer,
           to: data.socket
@@ -91,16 +91,19 @@ socket.on('offer-made', data => {
 
 socket.on('add-users', data => {
   for (const x of data.users) {
-    const div = document.createElement('div')
-    div.setAttribute('id', x)
-    div.addEventListener('click', () => {
+    let user = document.createElement('div')
+    user.setAttribute('id', x)
+    user.innerHTML = x
+    user.addEventListener('click', () => {
       createOffer(x)
     })
-    document.getElementById('users').appendChild(div)
+    document.getElementById('users').appendChild(user)
   }
 })
 
 socket.on('remove-user', id => {
-  const div = document.getElementById(id)
-  document.getElementById('users').removeChild(div)
+  const user = document.getElementById(id)
+  const small = document.getElementsByClassName('video-small')[0]
+  document.getElementById('users').removeChild(user)
+  document.getElementById('users-container').removeChild(small)
 })
