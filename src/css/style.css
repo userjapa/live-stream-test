@@ -1,0 +1,49 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+html, body {
+  width: 100%;
+}
+
+video {
+  background: #CCC;
+  border: 1px solid black;
+}
+
+.container {
+  width: 100%;
+}
+
+.video-large {
+  width: 75%;
+  float: left;
+}
+
+.users-container {
+  width: 21%;
+  float: right;
+  padding: 2%;
+  position: relative;
+}
+
+.video-small {
+  margin-top: 20px;
+  width: 100%;
+}
+
+#users div {
+  color: red;
+  text-decoration: underline;
+  cursor: pointer;
+  border: 2px solid black;
+  float: right;
+  max-width: 100px;
+}
+
+#users .active {
+  color: #000;
+  cursor: default;
+}

@@ -4,7 +4,9 @@
   "description": "Testing Live Stream using Socket.IO",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run build && node app",
+    "dev": "npm run build && $(npm bin)/nodemon app",
+    "build": "$(npm bin)/webpack"
   },
   "repository": {
     "type": "git",
@@ -17,8 +19,19 @@
   },
   "homepage": "https://github.com/usuarioJapa/live-stream-test#readme",
   "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "css-loader": "^0.28.9",
     "express": "^4.16.2",
+    "html-webpack-plugin": "^2.30.1",
+    "http": "^0.0.0",
     "path": "^0.12.7",
-    "socket.io": "^2.0.4"
+    "raw-loader": "^0.5.1",
+    "socket.io": "^2.0.4",
+    "style-loader": "^0.20.1",
+    "webpack": "^3.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.12"
   }
 }
