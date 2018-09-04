@@ -3362,6 +3362,7 @@ pc.onaddstream = function (obj) {
   let video = document.createElement('video');
   video.setAttribute('class', 'video-small');
   video.setAttribute('id', 'video-small');
+  console.log(obj);
   video.src = window.URL.createObjectURL(obj.stream);
   video.play();
   document.getElementById('users-container').appendChild(video);
